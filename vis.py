@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import os
 import cv2
 import pandas as pd
 import numpy as np
@@ -14,24 +15,28 @@ def main(base_path: str, screen_height_mm_offset: int = 10):
     fix_qt_cv_mismatch()
     camera_matrix, dist_coefficients = get_camera_matrix(base_path)
     face_mesh = mp.solutions.face_mesh.FaceMesh(static_image_mode=True)
-
+    parent_directory = os.path.dirname(base_path)
     # Считываем данные из CSV
-    df = pd.read_csv(f'{base_path}/data.csv')
+    df = pd.read_csv(f'{parent_directory}/data.csv')
     
     # Список для хранения изображений графиков
     plot_images = []
     
     # Генерация графиков
     for idx, row in df.iterrows():
-        monitor_mm = tuple(map(int, row['monitor_mm'][1:-1].split(',')))
-        monitor_pixels = tuple(map(int, row['monitor_pixels'][1:-1].split(',')))
-        point_on_screen_px = tuple(map(int, row['point_on_screen'][1:-1].split(',')))
+        #monitor_mm = tuple(map(int, row['monitor_mm'][1:-1].split(',')))
+        #monitor_pixels = tuple(map(int, row['monitor_pixels'][1:-1].split(',')))
+        #point_on_screen_px = tuple(map(int, row['point_on_screen'][1:-1].split(',')))
+        monitor_mm = (400, 250)
+        monitor_pixels = (1980, 1080)
+        point_on_screen_px = (400, 600)
 
         fig, ax = setup_figure()
         plot_screen(ax, monitor_mm[0], monitor_mm[1], screen_height_mm_offset)
         point_on_screen_3d = plot_target_on_screen(ax, point_on_screen_px, monitor_mm, monitor_pixels, screen_height_mm_offset)
 
-        frame = cv2.imread(f'{base_path}/{row["file_name"]}')
+        #frame = cv2.imread(f'{base_path}/{row["file_name"]}')
+        frame = cv2.imread(f'C:\\Users\\bokar\\Documents\\gaze_collection_stepa\\data\\p02\\day01\\2024_04_03-18_27_45-landmark.jpg')
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_rgb.flags.writeable = False
         results = face_mesh.process(frame_rgb)

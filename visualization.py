@@ -516,7 +516,7 @@ def setup_figure() -> Tuple:
 
 
 def plot_screen(ax, screen_width_mm, screen_height_mm, screen_height_mm_offset) -> None:
-    ax.plot(0, 0, 0, linestyle="", marker="o", color='#1f77b4', label='webcam')
+    ax.plot(0, 0, 0, linestyle="", marker="o", color='#1f77b4', label='веб-камера')
 
     screen_x = [-screen_width_mm / 2, screen_width_mm / 2]
     screen_y = [screen_height_mm_offset, screen_height_mm + screen_height_mm_offset]
@@ -525,7 +525,7 @@ def plot_screen(ax, screen_width_mm, screen_height_mm, screen_height_mm_offset) 
         [screen_y[0], screen_y[0], screen_y[1], screen_y[1], screen_y[0]],
         [0, 0, 0, 0, 0],
         color='#ff7f0e',
-        label='screen'
+        label='экран'
     )
 
 
@@ -534,7 +534,7 @@ def plot_target_on_screen(ax, point_on_screen_px, monitor_mm, monitor_pixels, sc
     screen_height_ratio = monitor_mm[1] / monitor_pixels[1]
 
     point_on_screen_mm = (monitor_mm[0] / 2 - point_on_screen_px[0] * screen_width_ratio, point_on_screen_px[1] * screen_height_ratio + screen_height_mm_offset)
-    ax.plot(point_on_screen_mm[0], point_on_screen_mm[1], 0, linestyle="", marker="X", color='#9467bd', label='target on screen')
+    ax.plot(point_on_screen_mm[0], point_on_screen_mm[1], 0, linestyle="", marker="X", color='#9467bd', label='точка на экране')
     return point_on_screen_mm[0], point_on_screen_mm[1], 0
 
 
@@ -562,15 +562,19 @@ def get_face_landmarks_in_ccs(camera_matrix, dist_coefficients, shape, results):
 
 
 def plot_face_landmarks(ax, face_model_all_transformed):
-    ax.plot(face_model_all_transformed[0, :], face_model_all_transformed[1, :], face_model_all_transformed[2, :], linestyle="", marker="o", color='#7f7f7f', markersize=1, label='face landmarks')
+    ax.plot(face_model_all_transformed[0, :], 
+            face_model_all_transformed[1, :],
+              face_model_all_transformed[2, :], 
+              linestyle="", marker="o", color='#7f7f7f', 
+              markersize=1, label='ключевые точки лица')
 
 
 def plot_eye_to_target_on_screen_line(ax, face_model_all_transformed, point_on_screen_3d):
     eye_center = (face_model_all_transformed[:, 33] + face_model_all_transformed[:, 133]) / 2
-    ax.plot([point_on_screen_3d[0], eye_center[0]], [point_on_screen_3d[1], eye_center[1]], [point_on_screen_3d[2], eye_center[2]], color='#2ca02c', label='right eye gaze vector')
+    ax.plot([point_on_screen_3d[0], eye_center[0]], [point_on_screen_3d[1], eye_center[1]], [point_on_screen_3d[2], eye_center[2]], color='#2ca02c', label='вектор взгляда правого глаза')
 
     eye_center = (face_model_all_transformed[:, 263] + face_model_all_transformed[:, 362]) / 2
-    ax.plot([point_on_screen_3d[0], eye_center[0]], [point_on_screen_3d[1], eye_center[1]], [point_on_screen_3d[2], eye_center[2]], color='#d62728', label='left eye gaze vector')
+    ax.plot([point_on_screen_3d[0], eye_center[0]], [point_on_screen_3d[1], eye_center[1]], [point_on_screen_3d[2], eye_center[2]], color='#d62728', label='вектор взгляда левого глаза')
 
 
 def main(base_path: str, screen_height_mm_offset: int = 10):
